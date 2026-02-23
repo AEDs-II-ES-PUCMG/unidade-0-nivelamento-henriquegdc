@@ -10,7 +10,7 @@ public class ProdutoNaoPerecivel extends Produto{
     }
 
     @Override
-    public double valorDeVenda() {
-        return super.valorDeVenda();
+    public double valorVenda() {
+        return super.valorVenda();
     }
 }
