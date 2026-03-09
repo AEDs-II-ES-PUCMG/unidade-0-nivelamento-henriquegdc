@@ -1,34 +1,43 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 
-public class ProdutoPerecivel extends Produto{
+public class ProdutoPerecivel extends Produto {
 
     private static final double DESCONTO = 0.25;
-    private final int PRAZO_DESCONTO =7;
+    private final int PRAZO_DESCONTO = 7;
     private LocalDate dataDeValidade;
-
 
     public ProdutoPerecivel(String desc, double precoCusto, double margemLucro, LocalDate validade) {
         super(desc, precoCusto, margemLucro);
         if(validade.isBefore(LocalDate.now())){
-            throw new IllegalArgumentException("data de validade inválida" + validade);
-        }else{
-            dataDeValidade = validade;
+            throw new IllegalArgumentException("Data de validade inválida: " + validade);
+        } else {
+            this.dataDeValidade = validade;
         }
     }
 
     @Override
-    public double valorVenda() {
-        double desconto = 0.0;
-        int diasValidade = LocalDate.now().until(dataDeValidade).getDays();
-        if(diasValidade<= PRAZO_DESCONTO){
-            desconto = DESCONTO;
+    public double valorDeVenda() {
+        double valorNormal = super.valorDeVenda();
+        long diasValidade = ChronoUnit.DAYS.between(LocalDate.now(), dataDeValidade);
+        
+        if(diasValidade <= PRAZO_DESCONTO){
+            return valorNormal * (1.0 - DESCONTO);
         }
-        return (precoCusto + (1 + margemLucro)) + (1-desconto);
+        return valorNormal;
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return super.toString() + " - Validade: " + dataDeValidade.format(formatter);
     }
 
+    @Override
+    public String gerarDadosTexto() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return String.format(Locale.US, "2;%s;%.2f;%.2f;%s", descricao, precoCusto, margemLucro, dataDeValidade.format(formatter));
+    }
 }

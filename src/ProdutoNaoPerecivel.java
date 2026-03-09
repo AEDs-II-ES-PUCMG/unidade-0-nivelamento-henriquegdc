@@ -1,5 +1,6 @@
-public class ProdutoNaoPerecivel extends Produto{
+import java.util.Locale;
 
+public class ProdutoNaoPerecivel extends Produto {
 
     public ProdutoNaoPerecivel(String desc, double precoCusto, double margemLucro) {
         super(desc, precoCusto, margemLucro);
@@ -10,7 +11,7 @@ public class ProdutoNaoPerecivel extends Produto{
     }
 
     @Override
-    public double valorVenda() {
-        return super.valorVenda();
+    public String gerarDadosTexto() {
+        return String.format(Locale.US, "1;%s;%.2f;%.2f", descricao, precoCusto, margemLucro);
     }
 }
